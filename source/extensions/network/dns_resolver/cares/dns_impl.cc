@@ -213,6 +213,7 @@ void DnsResolverImpl::AddrInfoPendingResolution::onAresGetAddrInfoCallback(
   }
 
   if (dual_resolution_) {
+    ENVOY_LOG_EVENT(debug, "cares_dns_dual_resolution", "for {}", dns_name_);
     dual_resolution_ = false;
 
     // Perform a second lookup for DnsLookupFamily::Auto and DnsLookupFamily::V4Preferred, given
@@ -413,6 +414,8 @@ void DnsResolverImpl::AddrInfoPendingResolution::startResolutionImpl(int family)
    * will be attempted
    */
   hints.ai_flags = ARES_AI_NOSORT;
+
+  ENVOY_LOG_EVENT(debug, "cares_dns_call_getaddrinfo", "for {} with family {}", dns_name_, family);
 
   ares_getaddrinfo(
       channel_, dns_name_.c_str(), /* service */ nullptr, &hints,
